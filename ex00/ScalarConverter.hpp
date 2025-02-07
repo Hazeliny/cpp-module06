@@ -15,6 +15,11 @@
 #include <iostream>
 #include <iomanip>
 #include <cctype>
+#include <limits>
+#include <string>
+#include <cerrno>
+#include <cstdlib>
+
 
 class ScalarConverter
 {
@@ -46,7 +51,10 @@ class ScalarConverter
 };
 
 std::string s2i(char const *s, int *i, int base);
-void printType(int i);
+bool isValidHex(std::string const &str);
+bool isValidOct(std::string const &str);
+bool isValidDec(std::string const &str);
+//void printType(int i);
 
 typedef bool (*typeOfInput)(std::string const &s);
 typedef void (*typeToConv)(std::string const &s);
