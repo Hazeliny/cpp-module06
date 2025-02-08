@@ -6,7 +6,7 @@
 /*   By: linyao <linyao@student.42barcelona.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 22:18:27 by linyao            #+#    #+#             */
-/*   Updated: 2025/02/07 00:27:37 by linyao           ###   ########.fr       */
+/*   Updated: 2025/02/08 01:05:05 by linyao           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,23 +41,14 @@ double ScalarConverter::_d;
 bool ScalarConverter::_impChar;
 bool ScalarConverter::_impInt;
 
-bool ScalarConverter::isChar(std::string const &s)
+bool isChar(std::string const &s)
 {
-    if (s.length() == 1) {return true;}
-    if (isValidHex(s) || isValidOct(s) || isValidDec(s))
-    {
-        int num;
-        s2i(s.c_str(), &num, 0);
-        std::cout << "num in Char: " << num << std::endl;
-        if (num >= 0 && num <= 255)
-            return true;
-    }
-    else
-        _impChar = true;
+    if (s.length() == 1 && !isdigit(s[0]))
+        return true;
     return false;
 }
 
- bool ScalarConverter::isInt(std::string const &s)
+ bool isInt(std::string const &s)
  {
     if (isValidHex(s) || isValidOct(s) || isValidDec(s))
     {
@@ -66,41 +57,46 @@ bool ScalarConverter::isChar(std::string const &s)
             if (s[i] == '.')
                 return false;
         }
-        int num;
-        std::string res = s2i(s.c_str(), &num, 0);
-        if (res == "OK")
-            return true;
+        return true;
     }
-    _impChar = true;
-    _impInt = true;
     return false;
  }
  
- bool ScalarConverter::isFloat(std::string const &s)
+ bool isFloat(std::string const &s)
  {
+    size_t i;
     if (isValidHex(s) || isValidOct(s) || isValidDec(s))
     {
-        int num;
-        std::string res = s2i(s.c_str(), &num, 0);
-        if (res == "OK")
+        for (i = 0; i < s.length(); ++i)
+        {
+            if (s[i] == '.')
+                break ;
+        }
+        if (i < s.length() && (s[s.length() - 1] == 'f' || s[s.length() - 1] == 'F'))
             return true;
+        else
+            return false;
     }
-    _impChar = true;
-    _impInt = true;
     return false;
  }
  
- bool ScalarConverter::isDouble(std::string const &s)
+ bool isDouble(std::string const &s)
  {
+    size_t i;
     if (isValidHex(s) || isValidOct(s) || isValidDec(s))
     {
-        int num;
-        std::string res = s2i(s.c_str(), &num, 0);
-        if (res == "OK")
+        for (i = 0; i < s.length(); ++i)
+        {
+            if (s[i] == '.')
+                break ;
+        }
+        if (i < s.length() && (s[s.length() - 1] == 'f' || s[s.length() - 1] == 'F'))
+            return false;
+        else if (i < s.length())
             return true;
+        else
+            return false;
     }
-    _impChar = true;
-    _impInt = true;
     return false;
  }
 
@@ -116,14 +112,24 @@ void ScalarConverter::convC(std::string const &s)
     else if (isValidHex(s) || isValidOct(s) || isValidDec(s))
     {
         int num;
-        std::string res = s2i(s.c_str(), &num, 0);
-        if (num >= 0 && num <= 255 && res == "OK")
+        double d;
+        std::string res = s2i(s.c_str(), &num, &d);
+        if (num >= 0 && num <= 255 && res == "OK(int)")
             _c = static_cast<char>(num);
-        else if (res == "OK")
+//        else if (res == "OK(int)")
+        else
             _impChar = true;
-        _i = static_cast<int>(num);
-        _f = static_cast<float>(num);
-        _d = static_cast<double>(num);
+        if (res != "OVERFLOW" && res != "UNDERFLOW" && res != "INCONVERTIBLE")
+        {
+            _i = num;
+            _f = static_cast<float>(d);
+            _d = d;
+        }
+        else
+        {
+            _impChar = true;
+            _impInt = true;
+        }
     }
     else
     {
@@ -137,14 +143,23 @@ void ScalarConverter::convI(std::string const &s)
     if (isValidHex(s) || isValidOct(s) || isValidDec(s))
     {
         int num;
-        std::string res = s2i(s.c_str(), &num, 0);
-        if (num >= 0 && num <= 255 && res == "OK")
+        double d;
+        std::string res = s2i(s.c_str(), &num, &d);
+        if (num >= 0 && num <= 255 && res == "OK(int)")
             _c = static_cast<char>(num);
-        else if (res == "OK")
+        else
             _impChar = true;
-        _i = static_cast<int>(num);
-        _f = static_cast<float>(num);
-        _d = static_cast<double>(num);
+        if (res != "OVERFLOW" && res != "UNDERFLOW" && res != "INCONVERTIBLE")
+        {
+            _i = num;
+            _f = static_cast<float>(d);
+            _d = d;
+        }
+        else
+        {
+            _impChar = true;
+            _impInt = true;
+        }
     }
     else
     {
@@ -158,14 +173,23 @@ void ScalarConverter::convF(std::string const &s)
     if (isValidHex(s) || isValidOct(s) || isValidDec(s))
     {
         int num;
-        std::string res = s2i(s.c_str(), &num, 0);
-        if (num >= 0 && num <= 255 && res == "OK")
+        double d;
+        std::string res = s2i(s.c_str(), &num, &d);
+        if (num >= 0 && num <= 255 && res == "OK(int)")
             _c = static_cast<char>(num);
-        else if (res == "OK")
+        else
             _impChar = true;
-        _i = static_cast<int>(num);
-        _f = static_cast<float>(num);
-        _d = static_cast<double>(num);
+        if (res != "OVERFLOW" && res != "UNDERFLOW" && res != "INCONVERTIBLE")
+        {
+            _i = num;
+            _f = static_cast<float>(d);
+            _d = d;
+        }
+        else
+        {
+            _impChar = true;
+            _impInt = true;
+        }
     }
     else
     {
@@ -179,14 +203,23 @@ void ScalarConverter::convD(std::string const &s)
     if (isValidHex(s) || isValidOct(s) || isValidDec(s))
     {
         int num;
-        std::string res = s2i(s.c_str(), &num, 0);
-        if (num >= 0 && num <= 255 && res == "OK")
+        double d;
+        std::string res = s2i(s.c_str(), &num, &d);
+        if (num >= 0 && num <= 255 && res == "OK(int)")
             _c = static_cast<char>(num);
-        else if (res == "OK")
+        else
             _impChar = true;
-        _i = static_cast<int>(num);
-        _f = static_cast<float>(num);
-        _d = static_cast<double>(num);
+        if (res != "OVERFLOW" && res != "UNDERFLOW" && res != "INCONVERTIBLE")
+        {
+            _i = num;
+            _f = static_cast<float>(d);
+            _d = d;
+        }
+        else
+        {
+            _impChar = true;
+            _impInt = true;
+        }
     }
     else
     {
@@ -260,37 +293,66 @@ void ScalarConverter::convert(std::string const &str)
     }
 }
 
-std::string s2i(char const *s, int *i, int base)
+std::string s2i(char const *s, int *i, double *d)
 {
     char *end;
     long l;
     errno = 0;
-    l = strtol(s, &end, base);
-    if ((errno == ERANGE && l == std::numeric_limits<long int>::max()) || l > std::numeric_limits<int>::max())
-        return ("OVERFLOW");
-    if ((errno == ERANGE && l == std::numeric_limits<long int>::min()) || l < std::numeric_limits<int>::min())
-        return ("UNDERFLOW");
-    if (*s == '\0' || *end != '\0')
+    if (!s || *s == '\0')
         return ("INCONVERTIBLE");
-    *i = l;
-    return ("OK");
+    l = strtol(s, &end, 0);//only for integer in decimal or oct or hex
+    std::string str;
+    str.assign(s);
+    if (*end == '\0' || isValidOct(str) || isValidHex(str))
+    {
+        if ((errno == ERANGE && l == std::numeric_limits<long int>::max()) || l > std::numeric_limits<int>::max())
+            return ("OVERFLOW");
+        if ((errno == ERANGE && l == std::numeric_limits<long int>::min()) || l < std::numeric_limits<int>::min())
+            return ("UNDERFLOW");
+        *i = static_cast<int>(l);
+        *d = static_cast<double>(*i);
+        return ("OK(int)");
+    }
+    errno = 0;
+    double tmpD = strtod(s, &end);// only for decimal
+    if (*end == '\0' || ((*end == 'f' || *end == 'F') && *(end + 1) == '\0'))
+    {
+        if ((errno == ERANGE && tmpD == std::numeric_limits<long int>::max()) || tmpD > std::numeric_limits<int>::max())
+            return ("OVERFLOW");
+        if ((errno == ERANGE && tmpD == std::numeric_limits<long int>::min()) || tmpD < std::numeric_limits<int>::min())
+            return ("UNDERFLOW");
+        *d = tmpD;
+        *i = static_cast<int>(tmpD);
+        double intPart;
+        double fracPart = std::modf(tmpD, &intPart);
+        if (fracPart == 0.0)
+            return ("OK(int)");
+        else
+            return ("OK(float/double)");
+    }
+    return ("INCONVERTIBLE");
 }
 
 bool isValidHex(std::string const &str)
 {
-    if (str.length() > 3 || (str[0] != '0' || (str[1] != 'x' && str[1] != 'X')))
+    if (str.length() < 3)
         return false;
+    size_t i = 0;
+    if (str[i] == '+' || str[i] == '-')
+        i++;
+    if (str[i] != '0' || (str[i + 1] != 'x' && str[i + 1] != 'X'))
+        return false;
+    i += 2;
     bool hasDecimalPoint = false;
-    if (!std::isxdigit(str[2]))
+    if (!std::isxdigit(str[i]))
             return false;
-    for (size_t i = 3; i < str.length(); ++i)
+    i++;
+    for (; i < str.length(); ++i)
     {
         if (std::isxdigit(str[i]))
             continue ;
         else if (str[i] == '.' && !hasDecimalPoint && i < str.length() - 1)
             hasDecimalPoint = true;
-        else if ((str[i] == 'f' || str[i] == 'F') && i == str.length() - 1)
-            return true;
         else
             return false;
     }
@@ -299,16 +361,26 @@ bool isValidHex(std::string const &str)
 
 bool isValidOct(std::string const &str)
 {
-    if (str.length() < 2 || str[0] != '0')
+    if (str.length() < 2 || (str[0] != '0' && str[0] != '+' && str[0] != '-'))
         return false;
     bool hasDecimalPoint = false;
-    if (str[1] < '0' || str[1] >= '7')
+    size_t i = 0;
+    if (str[i] == '+' || str[i] == '-')
+        i++;
+    if (str[i] != '0')
+        return false;
+    i++;
+    if (str[i] < '0' || str[i] >= '7')
             return false;
-    for (size_t i = 2; i < str.length(); ++i)
+    i++;
+    for (; i < str.length(); ++i)
     {
         if (str[i] >= '0' && str[i] < '7')
             continue ;
-        else if (str[i] == '.' && !hasDecimalPoint && i < str.length() - 1)
+        else if ((str[i] == '.' && !hasDecimalPoint && i < str.length() - 1 && 
+                (str[str.length() - 1] != 'f' && str[str.length() - 1] != 'F')) || 
+                (str[i] == '.' && !hasDecimalPoint && i < str.length() - 2 &&
+                (str[str.length() - 1] == 'f' || str[str.length() - 1] == 'F')))
             hasDecimalPoint = true;
         else if ((str[i] == 'f' || str[i] == 'F') && i == str.length() - 1)
             return true;
@@ -329,11 +401,6 @@ bool isValidDec(std::string const &str)
         hasSign = true;
         i++;
     }
-/*
-    if (!std::isdigit(str[i]))
-        return false;
-    i++;
-*/
     bool hasDecimalPoint = false, hasDigits = false;
     for (; i < str.length(); ++i)
     {

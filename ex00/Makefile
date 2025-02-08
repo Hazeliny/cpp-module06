@@ -6,11 +6,11 @@
 #    By: linyao <linyao@student.42barcelona.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/22 23:15:37 by linyao            #+#    #+#              #
-#    Updated: 2025/01/22 23:19:22 by linyao           ###   ########.fr        #
+#    Updated: 2025/02/08 01:04:35 by linyao           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = ScalarConverter
+NAME = convert
 CXX = c++
 CPPFLAGS = -Wall -Wextra -Werror -std=c++98 -pedantic -Wshadow
 RM = rm -rf
