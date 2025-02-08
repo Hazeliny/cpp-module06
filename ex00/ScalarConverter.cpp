@@ -6,7 +6,7 @@
 /*   By: linyao <linyao@student.42barcelona.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 22:18:27 by linyao            #+#    #+#             */
-/*   Updated: 2025/02/08 01:05:05 by linyao           ###   ########.fr       */
+/*   Updated: 2025/02/08 11:38:02 by linyao           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,12 @@ ScalarConverter::~ScalarConverter()
 
 ScalarConverter &ScalarConverter::operator=(ScalarConverter const &src)
 {
-    this->_c = src._c;
-    this->_i = src._i;
-    this->_f = src._f;
-    this->_d = src._d;
-    this->_impChar = src._impChar;
-    this->_impInt = src._impInt;
+    _c = src._c;
+    _i = src._i;
+    _f = src._f;
+    _d = src._d;
+    _impChar = src._impChar;
+    _impInt = src._impInt;
     return (*this);
 }
 
@@ -283,11 +283,11 @@ void ScalarConverter::convert(std::string const &str)
         else
             std::cout << "int: impossible" << std::endl;
         if (!_impInt)
-            std::cout << "float: " << std::fixed << std::setprecision(4) << _f << "f" << std::endl;
+            std::cout << "float: " << std::fixed << std::setprecision(1) << _f << "f" << std::endl;
         else
             std::cout << "float: " << s2i(str.c_str(), &n, 0) << std::endl;
         if (!_impInt)
-            std::cout << "double: " << std::fixed << std::setprecision(4) << _d << std::endl;
+            std::cout << "double: " << std::fixed << std::setprecision(1) << _d << std::endl;
         else
             std::cout << "double: " << s2i(str.c_str(), &n, 0) << std::endl;
     }
