@@ -6,7 +6,7 @@
 /*   By: linyao <linyao@student.42barcelona.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 11:48:06 by linyao            #+#    #+#             */
-/*   Updated: 2025/02/08 11:56:21 by linyao           ###   ########.fr       */
+/*   Updated: 2025/02/09 13:06:48 by linyao           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 #include <iostream>
 #include <string>
-#include <cstdint>
+#include <stdint.h>
 
 typedef struct Data {
     std::string commodity;
