@@ -370,12 +370,12 @@ bool isValidOct(std::string const &str)
     if (str[i] != '0')
         return false;
     i++;
-    if (str[i] < '0' || str[i] >= '7')
+    if (str[i] < '0' || str[i] > '7')
             return false;
     i++;
     for (; i < str.length(); ++i)
     {
-        if (str[i] >= '0' && str[i] < '7')
+        if (str[i] >= '0' && str[i] <= '7')
             continue ;
         else if ((str[i] == '.' && !hasDecimalPoint && i < str.length() - 1 && 
                 (str[str.length() - 1] != 'f' && str[str.length() - 1] != 'F')) || 
@@ -396,6 +396,7 @@ bool isValidDec(std::string const &str)
         return false;
     size_t i = 0;
     bool hasSign = false;
+    bool leadingZero = false;
     if (str[i] == '+' || str[i] == '-')
     {
         hasSign = true;
@@ -405,7 +406,16 @@ bool isValidDec(std::string const &str)
     for (; i < str.length(); ++i)
     {
         if (std::isdigit(str[i]))
-            hasDigits = true;
+        {
+            if (str[i] == '0' && !hasDigits)
+                leadingZero = true;
+            else if (str[i] >= '1' && str[i] <= '9')
+            {
+                if (leadingZero)
+                    return false;
+                hasDigits = true;
+            }
+        }
         else if (str[i] == '.' && !hasDecimalPoint && i < str.length() - 1 && hasDigits)
         {
             if (((hasSign && i > 1) || (!hasSign && i > 0)) && std::isdigit(str[i + 1]))
