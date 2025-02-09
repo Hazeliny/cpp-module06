@@ -6,9 +6,11 @@
 /*   By: linyao <linyao@student.42barcelona.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:58:29 by linyao            #+#    #+#             */
-/*   Updated: 2025/02/08 13:06:14 by linyao           ###   ########.fr       */
+/*   Updated: 2025/02/09 15:01:42 by linyao           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#pragma once
 
 #include <iostream>
 #include <cstdlib>
